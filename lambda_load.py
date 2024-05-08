@@ -8,6 +8,10 @@ import botocore
 
 execution_time = datetime.datetime.now()
 
+'''
+Quick Note: This script requires loading pymysql to the Lambda instance to run, as well as building environment variables for the db connection
+'''
+
 # rds settings
 user_name = os.environ['USER_NAME']
 password = os.environ['PASSWORD']
@@ -40,9 +44,9 @@ def lambda_handler(event, context):
 
 
     for card in json_load:
-        card_sql_text = f"""INSERT INTO card (oracle_id, name, `set`, released_at, update_timestamp) VALUES (%s, %s, %s, %s, %s) AS CardUpdate
+        card_sql_text = f"""INSERT INTO card (oracle_id, name, card_set, released_at, update_timestamp) VALUES (%s, %s, %s, %s, %s) AS CardUpdate
                 ON DUPLICATE KEY UPDATE
-                oracle_id = CardUpdate.oracle_id, name = CardUpdate.name, `set` = CardUpdate.`set`, released_at = CardUpdate.released_at, update_timestamp = CardUpdate.update_timestamp;"""
+                oracle_id = CardUpdate.oracle_id, name = CardUpdate.name, card_set = CardUpdate.card_set, released_at = CardUpdate.released_at, update_timestamp = CardUpdate.update_timestamp;"""
     
         card_info_text = f"""INSERT INTO card_info (id, rarity, cmc, colors, type_line, power, toughness) VALUES (%s, %s, %s, %s, %s, %s, %s) AS CardUpdate
                 ON DUPLICATE KEY UPDATE
